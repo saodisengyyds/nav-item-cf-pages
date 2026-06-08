@@ -5,7 +5,8 @@ const Admin = () => import('./views/Admin.vue');
 
 const routes = [
   { path: '/', component: Home },
-  { path: '/admin', component: Admin }
+  { path: '/admin', component: Admin },
+  { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 
 const router = createRouter({
