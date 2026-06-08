@@ -71,7 +71,6 @@ nav-item-cf-pages/
 │   ├── package.json
 │   └── vite.config.mjs
 ├── worker/                      # Worker 版本入口，保留作参考
-├── wrangler.toml                # Cloudflare 配置
 ├── package.json                 # 根目录脚本和 wrangler 依赖
 └── README.md
 ```
@@ -115,9 +114,7 @@ database_name = "nav-item-db"
 database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
-如果你使用 **Cloudflare Pages Git 自动部署**，不建议把 `database_id` 写进仓库里的 `wrangler.toml`。请在 Pages 后台绑定 D1，见下面第 5 步。
-
-如果你使用 **Wrangler 本地直接部署**，可以在本地 `wrangler.toml` 里取消 `[[d1_databases]]` 示例注释，并填入你自己账号里的 `database_id`。
+本仓库没有提交 `wrangler.toml`，这样 Cloudflare Pages 后台的绑定按钮不会被锁定。请在 Pages 后台绑定 D1，见下面第 5 步。
 
 ### 3. 初始化 D1 数据
 
@@ -152,7 +149,7 @@ Workers & Pages → Create application → Pages → Connect to Git
 D1 binding 'DB' references database '...' which was not found
 ```
 
-所以本仓库默认不写死 D1 ID，请在 Pages 项目设置里绑定你自己账号的 D1：
+所以本仓库默认不提交 `wrangler.toml`，请在 Pages 项目设置里绑定你自己账号的 D1：
 
 ```text
 Settings → Functions → D1 database bindings
@@ -209,7 +206,7 @@ npx wrangler pages project create nav-item-cf --production-branch main --compati
 npx wrangler pages deploy web/dist --project-name nav-item-cf
 ```
 
-注意：直接部署前需要确认 `DB` 绑定来自你自己的 Cloudflare 账号。不要使用别人仓库里的旧 `database_id`。
+注意：直接部署前需要确认 `DB` 绑定来自你自己的 Cloudflare 账号。
 
 直接部署后仍需要确认 Pages 项目里已经有：
 
@@ -273,3 +270,20 @@ npx wrangler d1 migrations apply nav-item-db --remote
 ## License
 
 MIT
+
+## 为什么 Cloudflare Pages 绑定按钮是灰色？
+
+如果 Pages 项目的绑定页面里“添加”按钮是灰色，通常是因为仓库根目录存在 `wrangler.toml`。Cloudflare 会认为绑定由配置文件管理，所以禁止在 Dashboard 里手动添加。
+
+本仓库已经移除 `wrangler.toml`，请拉取最新代码或重新部署最新 commit，然后到：
+
+```text
+Pages 项目 → Settings → Functions → D1 database bindings
+```
+
+添加：
+
+```text
+Binding name: DB
+D1 database: nav-item-db
+```
