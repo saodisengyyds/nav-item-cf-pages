@@ -3,12 +3,14 @@ compatibility_date = "2025-01-01"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "web/dist"
 
-[vars]
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "123456"
-JWT_SECRET = "nav-item-cf-worker-jwt-secret-change-me"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "nav-item-db"
-database_id = "beff5edd-0c4d-44c5-91d5-04f175a9d118"
+# 注意：不要在公共仓库里写死 D1 database_id。
+# 使用 Cloudflare Pages Git 部署时，请在 Pages 后台绑定：
+# Settings -> Functions -> D1 database bindings
+# Binding name: DB
+# D1 database: 你自己账号里的 nav-item-db
+#
+# 如果你要用 Wrangler 直接部署，也可以复制下面示例，填入你自己的 database_id：
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "nav-item-db"
+# database_id = "your-own-d1-database-id"

@@ -115,7 +115,9 @@ database_name = "nav-item-db"
 database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```
 
-把 `database_id` 填入 `wrangler.toml`。
+如果你使用 **Cloudflare Pages Git 自动部署**，不建议把 `database_id` 写进仓库里的 `wrangler.toml`。请在 Pages 后台绑定 D1，见下面第 5 步。
+
+如果你使用 **Wrangler 本地直接部署**，可以在本地 `wrangler.toml` 里取消 `[[d1_databases]]` 示例注释，并填入你自己账号里的 `database_id`。
 
 ### 3. 初始化 D1 数据
 
@@ -144,7 +146,13 @@ Workers & Pages → Create application → Pages → Connect to Git
 
 ### 5. 绑定 D1 数据库
 
-在 Pages 项目设置里：
+这一步很重要。Pages Git 部署时，如果仓库里写死了别人的 `database_id`，会报错：
+
+```text
+D1 binding 'DB' references database '...' which was not found
+```
+
+所以本仓库默认不写死 D1 ID，请在 Pages 项目设置里绑定你自己账号的 D1：
 
 ```text
 Settings → Functions → D1 database bindings
@@ -201,7 +209,9 @@ npx wrangler pages project create nav-item-cf --production-branch main --compati
 npx wrangler pages deploy web/dist --project-name nav-item-cf
 ```
 
-注意：直接部署后仍需要确认 Pages 项目里已经有：
+注意：直接部署前需要确认 `DB` 绑定来自你自己的 Cloudflare 账号。不要使用别人仓库里的旧 `database_id`。
+
+直接部署后仍需要确认 Pages 项目里已经有：
 
 - D1 binding：`DB`
 - 环境变量：`ADMIN_USERNAME`、`ADMIN_PASSWORD`、`JWT_SECRET`
